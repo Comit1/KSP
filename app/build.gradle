@@ -31,10 +31,15 @@ android {
         jvmTarget = '1.8'
     }
 
+    // 屏蔽下面的代码也没问题
     kotlin {
         sourceSets {
             main.kotlin.srcDirs += 'build/generated/ksp/main/kotlin'
         }
+    }
+
+    ksp {
+        arg("module_name", project.getName())
     }
 }
 

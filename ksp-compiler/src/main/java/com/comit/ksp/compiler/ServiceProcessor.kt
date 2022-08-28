@@ -15,17 +15,20 @@ import com.google.devtools.ksp.validate
  */
 class ServiceProcessor(
     private val codeGenerator: CodeGenerator,
-    private val logger: KSPLogger
+    private val logger: KSPLogger,
+    private val options: Map<String, String>
 ) : SymbolProcessor {
 
     companion object {
+
+        private const val KEY_MODULE_NAME = "module_name"
 
         private const val SERVICE_NAME = "com.comit.service.IService"
 
     }
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
-
+        val moduleName = options[KEY_MODULE_NAME]
         val symbols = resolver.getSymbolsWithAnnotation(Provider::class.qualifiedName!!)
         val result = symbols.filter { !it.validate() }.toList()
         val providerList = symbols
