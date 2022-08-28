@@ -17,21 +17,21 @@ class ServiceGenerator {
 
         private const val PACKAGE_NAME = "com.comit.service"
 
-        private const val CLASS_NAME = "ServiceProvidersImpl"
-
     }
 
     @OptIn(KotlinPoetKspPreview::class)
     fun generate(
         codeGenerator: CodeGenerator,
         logger: KSPLogger,
+        moduleName: String,
         classList: List<KSClassDeclaration>
     ) {
 
+        val providerClassName = "${moduleName.replaceFirstChar { it.uppercaseChar() }}ServiceProviders"
         // 添加文件
-        val fileSpecBuilder = FileSpec.builder(PACKAGE_NAME, CLASS_NAME)
+        val fileSpecBuilder = FileSpec.builder(PACKAGE_NAME, providerClassName)
 
-        val classBuilder = TypeSpec.Companion.classBuilder(CLASS_NAME)
+        val classBuilder = TypeSpec.Companion.classBuilder(providerClassName)
 
         val map = ClassName("kotlin.collections", "Map")
         val arrayList = ClassName("kotlin.collections", "HashMap")

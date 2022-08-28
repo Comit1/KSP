@@ -31,10 +31,9 @@ android {
         jvmTarget = '1.8'
     }
 
-    // 屏蔽下面的代码也没问题
-    kotlin {
-        sourceSets {
-            main.kotlin.srcDirs += 'build/generated/ksp/main/kotlin'
+    applicationVariants.all { variant ->
+        variant.sourceSets.java.each {
+            it.srcDirs += "build/generated/ksp/${variant.name}/kotlin"
         }
     }
 

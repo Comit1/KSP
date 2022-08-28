@@ -28,7 +28,11 @@ class ServiceProcessor(
     }
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
+        logger.logging("ServiceProcessor process")
         val moduleName = options[KEY_MODULE_NAME]
+        if (moduleName.isNullOrEmpty()) {
+            logger.error("module name is not correct.")
+        }
         val symbols = resolver.getSymbolsWithAnnotation(Provider::class.qualifiedName!!)
         val result = symbols.filter { !it.validate() }.toList()
         val providerList = symbols
@@ -43,7 +47,7 @@ class ServiceProcessor(
         }
 
         if (providerList.isNotEmpty()) {
-            ServiceGenerator().generate(codeGenerator, logger, providerList)
+            ServiceGenerator().generate(codeGenerator, logger, moduleName!!, providerList)
         }
 
         return result

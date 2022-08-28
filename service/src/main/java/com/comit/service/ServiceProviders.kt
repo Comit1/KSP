@@ -1,6 +1,5 @@
 package com.comit.service
 
-import android.util.Log
 import java.lang.IllegalArgumentException
 
 /*
@@ -19,7 +18,7 @@ object ServiceProviders {
             return
         }
         isInit = true
-        val clazz = Class.forName("com.comit.service.ServiceProvidersImpl")
+        val clazz = Class.forName("com.comit.service.AppServiceProviders")
         val method = clazz.getMethod("getServices")
         method.isAccessible = true
         val services = method.invoke(clazz.newInstance()) as Map<String, IService>
