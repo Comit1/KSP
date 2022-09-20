@@ -27,16 +27,22 @@ class ServiceProcessor(
 
     }
 
+    private var isHandleProcess = false
+
     override fun process(resolver: Resolver): List<KSAnnotated> {
-        logger.logging("ServiceProcessor process")
+
+        if (isHandleProcess) {
+            return emptyList()
+        }
+
         val moduleName = options[KEY_MODULE_NAME]
         if (moduleName.isNullOrEmpty()) {
             logger.error("module name is not correct.")
         }
+
         val symbols = resolver.getSymbolsWithAnnotation(Provider::class.qualifiedName!!)
-        val result = symbols.filter { !it.validate() }.toList()
         val providerList = symbols
-            .filter { it is KSClassDeclaration && it.validate()  }
+            .filter { it is KSClassDeclaration }
             .map { it as KSClassDeclaration }
             .toList()
 
@@ -50,7 +56,9 @@ class ServiceProcessor(
             ServiceGenerator().generate(codeGenerator, logger, moduleName!!, providerList)
         }
 
-        return result
+        isHandleProcess = true
+
+        return emptyList()
     }
 
     private fun isValidService(declaration: KSClassDeclaration): Boolean {
@@ -77,6 +85,16 @@ class ServiceProcessor(
         }
 
         return true
+    }
+
+    override fun finish() {
+        super.finish()
+        isHandleProcess = false
+    }
+
+    override fun onError() {
+        super.onError()
+        isHandleProcess = false
     }
 
 }
